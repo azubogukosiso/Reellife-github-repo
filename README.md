@@ -1,2 +1,2 @@
 # Reellife github repo
- a movie website
+ a simple movie website made with Reactjs and bootstrap, using the Omdb API
