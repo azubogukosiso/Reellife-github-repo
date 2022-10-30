@@ -24,8 +24,10 @@
     background: rgb(0, 0, 70);
     color: #fff;
     transition: 0.2s;
+    text-decoration: none;
 }
 .fav-btn:hover{
+    color: #fff;
     background: rgb(0, 0, 100);
 }
 .fav-btn:active{

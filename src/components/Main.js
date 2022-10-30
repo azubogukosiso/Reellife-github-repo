@@ -1,21 +1,22 @@
-import { Routes, Route, useNavigate } from 'react-router-dom';
+// import { Routes, Route, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import Header from './Header';
 import Home from './Home';
-import MovieDisplay  from './MovieDisplay';
-import MovieDisplayMovies  from './MovieDisplayMovies';
-import MovieDisplaySeries from './MovieDisplaySeries';
 import NoData from './NoData';
+import MovieDisplay  from './MovieDisplay';
+import MovieFavourites from './MovieFavourites';
 import Footer from './Footer';
 
 const Main = () => {
   const [movies, setMovies] = useState([]);
+  const [favourites, setFavourites] = useState([]);
   const [searchValue, setSearchValue] = useState('');
-  const navigate = useNavigate();
+  const [errorMsg, setErrorMsg] = useState(false);
+  const [heading, setHeading] = useState('');
 
   const checkSearchValue = () => {
     if (searchValue === ''){
-      navigate('/');
+      setErrorMsg(false);
       setMovies([]);
     }
   }
@@ -27,7 +28,7 @@ const Main = () => {
     if (responseJson.Search) {
       setMovies(responseJson.Search);
     } else{
-      navigate('/no-data');
+      setErrorMsg(true);
     }
   }
 
@@ -35,6 +36,7 @@ const Main = () => {
     if (searchValue === ''){
       alert('Type in some keywords to search');
     } else{
+      setHeading('All Categories');
       const url = `https://www.omdbapi.com/?apikey=39de1ca9&s=${searchValue}`;
       handleRequest(url);
     }
@@ -44,6 +46,7 @@ const Main = () => {
     if (searchValue === ''){
       alert('Type in some keywords to search');
     } else{
+      setHeading('Only Movies');
       const url = `https://www.omdbapi.com/?apikey=39de1ca9&s=${searchValue}&type=movie`;
       handleRequest(url);
     }
@@ -53,9 +56,26 @@ const Main = () => {
     if (searchValue === ''){
       alert('Type in some keywords to search');
     } else{
+      setHeading('Only Series');
       const url = `https://www.omdbapi.com/?apikey=39de1ca9&s=${searchValue}&type=series`;
       handleRequest(url);
     }
+  }
+
+  const addFavouriteMovie = (movie) => {
+    const newFavouriteList = [...favourites, movie];
+    setFavourites(newFavouriteList);
+  }
+  
+  let component;
+  if (movies.length == 0){
+    if (errorMsg){
+      component = <NoData />
+    } else{
+      component = <Home />
+    }
+  } else{
+    component = <MovieDisplay movies={movies} setMovies={setMovies} heading={heading} handleFavouritesClick={addFavouriteMovie} />
   }
 
   useEffect(() => {
@@ -70,15 +90,8 @@ const Main = () => {
         getMovieRequest={getMovieRequest} 
         getMovieRequestMovies={getMovieRequestMovies} 
         getMovieRequestSeries={getMovieRequestSeries} 
-        checkSearchValue={checkSearchValue} 
       />
-      <Routes>
-        <Route path='/' element={<Home />} />
-        <Route path='all' element={<MovieDisplay movies={movies} setMovies={setMovies} searchValue={searchValue} />} />
-        <Route path='movies' element={<MovieDisplayMovies movies={movies} setMovies={setMovies} searchValue={searchValue} />} />
-        <Route path='series' element={<MovieDisplaySeries movies={movies} setMovies={setMovies} searchValue={searchValue} />} />
-        <Route path='no-data' element={<NoData searchValue={searchValue} />} />
-      </Routes>
+      {component}
       <Footer/>
     </>
   )
