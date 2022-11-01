@@ -22,6 +22,9 @@ const MovieFavourites = (props) => {
         )}
       </div>
     </div>
+    // <div className='mt-5'>
+    //   <h3 className='text-center mb-4'>Favourite Movies</h3>
+    // </div>
   )
 }
 

@@ -16,10 +16,6 @@
     background: #fff;
 }
 
-.search-btn:active{
-    transform: scale(0.85);
-}
-
 .fav-btn{
     background: rgb(0, 0, 70);
     color: #fff;
@@ -42,7 +38,7 @@
     padding: 10px 0;
 }
 
-.cat-btn{
+.custom-btn{
     text-decoration: none;
     color: #fff;
     font-size: 0.89rem;
@@ -50,11 +46,11 @@
     transition: 0.2s;
     border: none;
 }
-.cat-btn:hover{
+.custom-btn:hover{
     text-decoration: none;
     color: #fff;
     background: rgb(0, 0, 100);
 }
-.cat-btn:active{
+.custom-btn:active{
     transform: scale(0.85);
 }

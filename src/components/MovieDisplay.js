@@ -1,21 +1,8 @@
-// import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import "./css/MovieDisplay.css";
+import "./css/Header.css";
 
 const MovieDisplay = (props) => {
-
-  // const navigate = useNavigate();
-
-  // const checkSearchValue = () => {
-  //   if (props.searchValue === ''){
-  //     navigate('/');
-  //   }
-  // }
-
-  // useEffect(() => {
-  //   checkSearchValue()
-  // }, [props.searchValue]);
 
   return (
     <div className='mt-5'>
@@ -28,8 +15,8 @@ const MovieDisplay = (props) => {
               <p>{movie.Year}</p>
               <p>{movie.Type}</p>
               <div>
-                <button onClick={() => props.handleFavouritesClick(movie)} className="movie-options border border-light border-1 me-3">💖</button>
-                <button className="movie-options border border-light border-1">🎬</button>
+                <button onClick={() => props.handleFavouritesClick(movie)} className="fav-btn movie-options border border-light border-1 me-3" data-bs-toggle="tooltip" title="Add to favourites">💖</button>
+                <button className="fav-btn movie-options border border-light border-1" data-bs-toggle="tooltip" data-bs-html="true" title="See movie details">🎬</button>
               </div>
             </div>
             <img src={movie.Poster} alt="movie-poster" className="image img-fluid" />

@@ -1,5 +1,6 @@
-// import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import MoonLoader from 'react-spinners/MoonLoader';
 import Header from './Header';
 import Home from './Home';
 import NoData from './NoData';
@@ -13,6 +14,7 @@ const Main = () => {
   const [searchValue, setSearchValue] = useState('');
   const [errorMsg, setErrorMsg] = useState(false);
   const [heading, setHeading] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const checkSearchValue = () => {
     if (searchValue === ''){
@@ -27,8 +29,10 @@ const Main = () => {
 
     if (responseJson.Search) {
       setMovies(responseJson.Search);
+      setLoading(false);
     } else{
       setErrorMsg(true);
+      setLoading(false);
     }
   }
 
@@ -36,6 +40,7 @@ const Main = () => {
     if (searchValue === ''){
       alert('Type in some keywords to search');
     } else{
+      setLoading(true);
       setHeading('All Categories');
       const url = `https://www.omdbapi.com/?apikey=39de1ca9&s=${searchValue}`;
       handleRequest(url);
@@ -46,6 +51,7 @@ const Main = () => {
     if (searchValue === ''){
       alert('Type in some keywords to search');
     } else{
+      setLoading(true);
       setHeading('Only Movies');
       const url = `https://www.omdbapi.com/?apikey=39de1ca9&s=${searchValue}&type=movie`;
       handleRequest(url);
@@ -56,6 +62,7 @@ const Main = () => {
     if (searchValue === ''){
       alert('Type in some keywords to search');
     } else{
+      setLoading(true);
       setHeading('Only Series');
       const url = `https://www.omdbapi.com/?apikey=39de1ca9&s=${searchValue}&type=series`;
       handleRequest(url);
@@ -75,7 +82,26 @@ const Main = () => {
       component = <Home />
     }
   } else{
-    component = <MovieDisplay movies={movies} setMovies={setMovies} heading={heading} handleFavouritesClick={addFavouriteMovie} />
+    component =
+      loading ?
+
+      <MoonLoader
+        color={"#fff"}
+        loading={loading}
+        size={100}
+        aria-label="Loading Spinner"
+        data-testid="loader"
+        className='mt-5'
+      />
+
+      :
+
+      <MovieDisplay
+        movies={movies} 
+        setMovies={setMovies} 
+        heading={heading} 
+        handleFavouritesClick={addFavouriteMovie} 
+      />
   }
 
   useEffect(() => {
@@ -91,7 +117,12 @@ const Main = () => {
         getMovieRequestMovies={getMovieRequestMovies} 
         getMovieRequestSeries={getMovieRequestSeries} 
       />
-      {component}
+      <div className='d-flex align-items-center justify-content-center'>
+        <Routes>
+          <Route path='/' element={component} />
+          <Route path='/favourites' element={<MovieFavourites movies={favourites} />} />
+        </Routes>
+      </div>
       <Footer/>
     </>
   )
