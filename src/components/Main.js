@@ -69,9 +69,22 @@ const Main = () => {
     }
   }
 
+  const saveToLocalStorage = (items) => {
+    localStorage.setItem('reellife-favourites', JSON.stringify(items));
+  }
+
   const addFavouriteMovie = (movie) => {
     const newFavouriteList = [...favourites, movie];
     setFavourites(newFavouriteList);
+    saveToLocalStorage(newFavouriteList);
+  }
+
+  const removeFavouriteMovie = (movie) => {
+    const newFavouriteList = favourites.filter(
+      (favourite) => favourite.imdbID !== movie.imdbID
+    );
+    setFavourites(newFavouriteList);
+    saveToLocalStorage(newFavouriteList);
   }
   
   let component;
@@ -108,6 +121,11 @@ const Main = () => {
     checkSearchValue()
   }, [searchValue]);
 
+  useEffect(() => {
+    const movieFavourites = JSON.parse(localStorage.getItem('reellife-favourites'));
+    setFavourites(movieFavourites);
+  }, []);
+
   return (
     <>
       <Header 
@@ -120,7 +138,7 @@ const Main = () => {
       <div className='d-flex align-items-center justify-content-center'>
         <Routes>
           <Route path='/' element={component} />
-          <Route path='/favourites' element={<MovieFavourites movies={favourites} />} />
+          <Route path='/favourites' element={<MovieFavourites movies={favourites} handleFavouritesClick={removeFavouriteMovie} />} />
         </Routes>
       </div>
       <Footer/>

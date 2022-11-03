@@ -12,8 +12,9 @@ const MovieFavourites = (props) => {
               <h5 className="text-center mx-3">{movie.Title}</h5>
               <p>{movie.Year}</p>
               <p>{movie.Type}</p>
+              <p>{movie.imdbID}</p>
               <div>
-                <button className="movie-options border border-light border-1 me-3">❌</button>
+                <button onClick={() => props.handleFavouritesClick(movie)} className="movie-options border border-light border-1 me-3">❌</button>
                 <button className="movie-options border border-light border-1">🎬</button>
               </div>
             </div>
