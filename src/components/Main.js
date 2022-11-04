@@ -1,27 +1,27 @@
-import { Routes, Route } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import MoonLoader from 'react-spinners/MoonLoader';
-import Header from './Header';
-import Home from './Home';
-import NoData from './NoData';
-import MovieDisplay  from './MovieDisplay';
-import MovieFavourites from './MovieFavourites';
-import Footer from './Footer';
+import { Routes, Route } from "react-router-dom";
+import { useState, useEffect } from "react";
+import MoonLoader from "react-spinners/MoonLoader";
+import Header from "./Header";
+import Home from "./Home";
+import NoData from "./NoData";
+import MovieDisplay from "./MovieDisplay";
+import MovieFavourites from "./MovieFavourites";
+import Footer from "./Footer";
 
 const Main = () => {
   const [movies, setMovies] = useState([]);
   const [favourites, setFavourites] = useState([]);
-  const [searchValue, setSearchValue] = useState('');
+  const [searchValue, setSearchValue] = useState("");
   const [errorMsg, setErrorMsg] = useState(false);
-  const [heading, setHeading] = useState('');
+  const [heading, setHeading] = useState("");
   const [loading, setLoading] = useState(false);
 
   const checkSearchValue = () => {
-    if (searchValue === ''){
+    if (searchValue === "") {
       setErrorMsg(false);
       setMovies([]);
     }
-  }
+  };
 
   const handleRequest = async (url) => {
     const response = await fetch(url);
@@ -30,54 +30,54 @@ const Main = () => {
     if (responseJson.Search) {
       setMovies(responseJson.Search);
       setLoading(false);
-    } else{
+    } else {
       setErrorMsg(true);
       setLoading(false);
     }
-  }
+  };
 
   const getMovieRequest = async (searchValue) => {
-    if (searchValue === ''){
-      alert('Type in some keywords to search');
-    } else{
+    if (searchValue === "") {
+      alert("Type in some keywords to search");
+    } else {
       setLoading(true);
-      setHeading('All Categories');
+      setHeading("All Categories");
       const url = `https://www.omdbapi.com/?apikey=39de1ca9&s=${searchValue}`;
       handleRequest(url);
     }
-  }
+  };
 
   const getMovieRequestMovies = async (searchValue) => {
-    if (searchValue === ''){
-      alert('Type in some keywords to search');
-    } else{
+    if (searchValue === "") {
+      alert("Type in some keywords to search");
+    } else {
       setLoading(true);
-      setHeading('Only Movies');
+      setHeading("Only Movies");
       const url = `https://www.omdbapi.com/?apikey=39de1ca9&s=${searchValue}&type=movie`;
       handleRequest(url);
     }
-  }
+  };
 
   const getMovieRequestSeries = async (searchValue) => {
-    if (searchValue === ''){
-      alert('Type in some keywords to search');
-    } else{
+    if (searchValue === "") {
+      alert("Type in some keywords to search");
+    } else {
       setLoading(true);
-      setHeading('Only Series');
+      setHeading("Only Series");
       const url = `https://www.omdbapi.com/?apikey=39de1ca9&s=${searchValue}&type=series`;
       handleRequest(url);
     }
-  }
+  };
 
   const saveToLocalStorage = (items) => {
-    localStorage.setItem('reellife-favourites', JSON.stringify(items));
-  }
+    localStorage.setItem("reellife-favourites", JSON.stringify(items));
+  };
 
   const addFavouriteMovie = (movie) => {
     const newFavouriteList = [...favourites, movie];
     setFavourites(newFavouriteList);
     saveToLocalStorage(newFavouriteList);
-  }
+  };
 
   const removeFavouriteMovie = (movie) => {
     const newFavouriteList = favourites.filter(
@@ -85,65 +85,72 @@ const Main = () => {
     );
     setFavourites(newFavouriteList);
     saveToLocalStorage(newFavouriteList);
-  }
-  
-  let component;
-  if (movies.length == 0){
-    if (errorMsg){
-      component = <NoData />
-    } else{
-      component = <Home />
-    }
-  } else{
-    component =
-      loading ?
+  };
 
+  let component;
+  if (movies.length === 0) {
+    if (errorMsg) {
+      component = <NoData />;
+    } else {
+      component = <Home />;
+    }
+  } else {
+    component = loading ? (
       <MoonLoader
         color={"#fff"}
         loading={loading}
         size={100}
         aria-label="Loading Spinner"
         data-testid="loader"
-        className='mt-5'
+        className="mt-5 mx-auto"
       />
-
-      :
-
+    ) : (
       <MovieDisplay
-        movies={movies} 
-        setMovies={setMovies} 
-        heading={heading} 
-        handleFavouritesClick={addFavouriteMovie} 
+        movies={movies}
+        setMovies={setMovies}
+        heading={heading}
+        handleFavouritesClick={addFavouriteMovie}
       />
+    );
   }
 
   useEffect(() => {
-    checkSearchValue()
+    checkSearchValue();
   }, [searchValue]);
 
   useEffect(() => {
-    const movieFavourites = JSON.parse(localStorage.getItem('reellife-favourites'));
+    const movieFavourites = JSON.parse(
+      localStorage.getItem("reellife-favourites")
+    );
     setFavourites(movieFavourites);
   }, []);
 
   return (
     <>
-      <Header 
-        searchValue={searchValue} 
-        setSearchValue={setSearchValue} 
-        getMovieRequest={getMovieRequest} 
-        getMovieRequestMovies={getMovieRequestMovies} 
-        getMovieRequestSeries={getMovieRequestSeries} 
+      <Header
+        searchValue={searchValue}
+        setSearchValue={setSearchValue}
+        getMovieRequest={getMovieRequest}
+        getMovieRequestMovies={getMovieRequestMovies}
+        getMovieRequestSeries={getMovieRequestSeries}
       />
-      <div className='d-flex align-items-center justify-content-center'>
+      <div className="container my-5">
         <Routes>
-          <Route path='/' element={component} />
-          <Route path='/favourites' element={<MovieFavourites movies={favourites} handleFavouritesClick={removeFavouriteMovie} />} />
+          <Route path="/" element={component} />
+          <Route
+            path="/favourites"
+            element={
+              <MovieFavourites
+                movies={favourites}
+                handleFavouritesClick={removeFavouriteMovie}
+              />
+            }
+          />
         </Routes>
       </div>
-      <Footer/>
+      <Footer />
     </>
-  )
-}
+  );
+};
 
-export default Main
+export default Main;
